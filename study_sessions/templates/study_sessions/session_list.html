@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-5 study-sessions-container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Hero Section -->
+            <div class="text-center hero-section mb-5">
+                <h1 class="mega-title text-gradient mb-3">Study Sessions</h1>
+                <p class="lead text-muted animated-text">Transform your learning journey into measurable progress</p>
+            </div>
+
+            <!-- Create Session Card -->
+            <div class="create-session-card mb-5">
+                <div class="glass-morphism p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3 class="text-white mb-3 glow-text">Ready to Begin Your Journey?</h3>
+                            <p class="text-white-50">Create a new study session and track your learning progress</p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <a href="{% url 'study_sessions:session_create' %}" 
+                               class="btn btn-glass btn-lg floating-button">
+                                <i class="fas fa-play me-2"></i>Start Learning
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% regroup sessions by status as session_list %}
+            
+            <div class="sessions-grid">
+                {% for status_group in session_list %}
+                    <div class="session-group">
+                        <div class="status-header">
+                            <div class="status-icon 
+                                {% if status_group.grouper == 'in_progress' %}bg-success
+                                {% elif status_group.grouper == 'paused' %}bg-warning
+                                {% else %}bg-secondary{% endif %}">
+                                <i class="fas {% if status_group.grouper == 'in_progress' %}fa-running
+                                           {% elif status_group.grouper == 'paused' %}fa-pause
+                                           {% else %}fa-check{% endif %}"></i>
+                            </div>
+                            <h3 class="status-title">
+                                {% if status_group.grouper == 'in_progress' %}Active Sessions
+                                {% elif status_group.grouper == 'paused' %}Paused Sessions
+                                {% else %}Completed Sessions{% endif %}
+                            </h3>
+                        </div>
+                        <div class="cards-container">
+                            {% for session in status_group.list %}
+                                <div class="session-card glass-card">
+                                    <div class="card-content">
+                                        <div class="session-title">{{ session.title }}</div>
+                                        <div class="session-time">
+                                            <i class="far fa-clock"></i>
+                                            Started {{ session.start_time|timesince }} ago
+                                        </div>
+                                        <div class="topics-container">
+                                            {% for topic in session.topics.all %}
+                                                <span class="topic-chip">{{ topic.name }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <a href="{% url 'study_sessions:session_detail' session.pk %}" 
+                                           class="btn btn-outline-light btn-sm mt-3">
+                                            <i class="fas fa-arrow-right me-2"></i>View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .study-sessions-container {
+        background: linear-gradient(135deg, #1a1a1a, #2d3436);
+        min-height: 100vh;
+        color: white;
+    }
+
+    .mega-title {
+        font-size: 4rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .text-gradient {
+        background: linear-gradient(45deg, #00f2fe, #4facfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: hue-rotate 10s infinite linear;
+    }
+
+    .animated-text {
+        opacity: 0;
+        animation: fadeInUp 1s forwards;
+        animation-delay: 0.5s;
+    }
+
+    .glass-morphism {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 50px;
+        padding: 12px 30px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .topic-chip {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        background: rgba(33, 147, 176, 0.1);
+        color: #2193b0;
+        font-size: 0.875rem;
+        margin: 0.25rem;
+    }
+
+    .status-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+</style>
+{% endblock %}

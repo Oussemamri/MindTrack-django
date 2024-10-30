@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'quiz_app',
-    'learning_paths'
+    'learning_paths',
+    'study_sessions.apps.StudySessionsConfig'
 ]
 
 MIDDLEWARE = [

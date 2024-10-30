@@ -25,4 +25,5 @@ urlpatterns = [
     path('paths/', include('learning_paths.urls', namespace='learning_paths')),
 
     path('', include('quiz_app.urls')),
+    path('study-sessions/', include('study_sessions.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

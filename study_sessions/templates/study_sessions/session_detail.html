@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-5 study-detail-container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="glow-text mb-0">
+                            <i class="fas fa-book-reader me-2"></i>{{ session.title }}
+                        </h2>
+                        <div class="action-buttons">
+                            {% if session.status == 'in_progress' %}
+                                <a href="{% url 'study_sessions:pause_session' session.pk %}" 
+                                   class="btn btn-warning btn-glass">
+                                    <i class="fas fa-pause me-1"></i>Pause
+                                </a>
+                                <a href="{% url 'study_sessions:complete_session' session.pk %}" 
+                                   class="btn btn-success btn-glass">
+                                    <i class="fas fa-check me-1"></i>Complete
+                                </a>
+                            {% elif session.status == 'paused' %}
+                                <a href="{% url 'study_sessions:resume_session' session.pk %}" 
+                                   class="btn btn-primary btn-glass">
+                                    <i class="fas fa-play me-1"></i>Resume
+                                </a>
+                            {% endif %}
+                            <div class="btn-group ms-2">
+                                <a href="{% url 'study_sessions:session_update' session.pk %}" 
+                                   class="btn btn-light btn-glass">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </a>
+                                <a href="{% url 'study_sessions:session_delete' session.pk %}" 
+                                   class="btn btn-danger btn-glass">
+                                    <i class="fas fa-trash me-1"></i>Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body mt-4">
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p>{{ session.description|default:"No description provided." }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Topics</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for topic in session.topics.all %}
+                                <span class="badge bg-info">{{ topic.name }}</span>
+                            {% empty %}
+                                <p class="text-muted">No topics assigned.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if session.status == 'in_progress' %}
+                        <div class="mb-4">
+                            <h5>Add Activity</h5>
+                            <form method="post" action="{% url 'study_sessions:add_activity' session.pk %}" 
+                                  class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        {{ activity_form.activity_type }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ activity_form.quiz }}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ activity_form.notes }}
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-plus me-1"></i>Add Activity
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <h5>Activities</h5>
+                        <div class="list-group">
+                            {% for activity in activities %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">{{ activity.get_activity_type_display }}</h6>
+                                            {% if activity.quiz %}
+                                                <small>Quiz: {{ activity.quiz.title }}</small>
+                                            {% endif %}
+                                            {% if activity.notes %}
+                                                <p class="mb-1">{{ activity.notes }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ activity.start_time|timesince }} ago
+                                        </small>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted">No activities recorded yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .study-detail-container {
+        background: linear-gradient(135deg, #1a1a1a, #2d3436);
+        min-height: 100vh;
+        color: white;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 2rem;
+    }
+
+    .glow-text {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 50px;
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .action-buttons .btn {
+        margin-left: 0.5rem;
+    }
+</style>
+{% endblock %} 

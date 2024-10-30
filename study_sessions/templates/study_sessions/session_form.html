@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient text-white" 
+                     style="background: linear-gradient(45deg, #2193b0, #6dd5ed);">
+                    <h2 class="mb-0">
+                        <i class="fas fa-clock me-2"></i>
+                        {% if session %}Edit Study Session{% else %}New Study Session{% endif %}
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{{ form.title.label }}</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.title.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.description.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{{ form.topics.label }}</label>
+                            {{ form.topics }}
+                            {% if form.topics.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.topics.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>
+                                {% if session %}Update Session{% else %}Start Session{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #2193b0;
+        box-shadow: 0 0 0 0.25rem rgba(33, 147, 176, 0.25);
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #2193b0, #6dd5ed);
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(33, 147, 176, 0.4);
+    }
+</style>
+{% endblock %} 

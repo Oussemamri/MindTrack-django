@@ -136,16 +136,14 @@ def quiz_results(request, submission_id):
 @login_required
 def edit_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
-    
     if request.method == 'POST':
-        form = QuizGenerationForm(request.POST, instance=quiz, is_edit=True)
+        form = QuizGenerationForm(request.POST, instance=quiz)
         if form.is_valid():
-            quiz = form.save()
+            form.save()
             messages.success(request, 'Quiz updated successfully!')
             return redirect('quiz_app:quiz_detail', quiz_id=quiz.id)
     else:
-        form = QuizGenerationForm(instance=quiz, is_edit=True)
-    
+        form = QuizGenerationForm(instance=quiz)
     return render(request, 'quiz_app/edit_quiz.html', {'form': form, 'quiz': quiz})
 
 @login_required
@@ -156,3 +154,18 @@ def delete_quiz(request, quiz_id):
         messages.success(request, 'Quiz deleted successfully!')
         return redirect('quiz_app:quiz_list')
     return render(request, 'quiz_app/delete_quiz.html', {'quiz': quiz})
+
+def topic_detail(request, slug):
+    # Get topic with prefetched quizzes
+    topic = get_object_or_404(Topic.objects.prefetch_related('quiz_set'), slug=slug)
+    
+    # Add debug print statements
+    print(f"Topic: {topic.name}")
+    print(f"Quiz count: {topic.quiz_set.count()}")
+    print(f"Quizzes: {list(topic.quiz_set.all())}")
+    
+    context = {
+        'topic': topic,
+        'quizzes': topic.quiz_set.all()  # Explicitly pass quizzes to template
+    }
+    return render(request, 'quiz_app/topic_detail.html', context)

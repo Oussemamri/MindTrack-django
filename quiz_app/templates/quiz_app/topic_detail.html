@@ -11,18 +11,37 @@
                     <h2 class="mb-0 position-relative">
                         <i class="fas fa-book me-2"></i>{{ topic.name }}
                     </h2>
+                    <small class="text-white-50">Total Quizzes: {{ topic.quiz_set.count }}</small>
                 </div>
                 <div class="card-body p-0">
+                    <div class="p-3 bg-light border-bottom">
+                        <small class="text-muted">
+                            Debug Info:<br>
+                            Topic Name: {{ topic.name }}<br>
+                            Quiz Count: {{ topic.quiz_set.count }}<br>
+                            Direct Quiz Count: {{ quizzes.count }}
+                        </small>
+                    </div>
+                    
                     <div class="list-group list-group-flush">
-                        {% for quiz in topic.quiz_set.all %}
+                        {% for quiz in quizzes %}
                             <a href="{% url 'quiz_app:quiz_detail' quiz.id %}" 
                                class="list-group-item list-group-item-action quiz-item">
                                 <div class="d-flex align-items-center">
                                     <div class="quiz-icon me-3">
                                         <i class="fas fa-book-reader fa-2x text-primary"></i>
                                     </div>
-                                    <div>
+                                    <div class="flex-grow-1">
                                         <h5 class="mb-1">{{ quiz.title }}</h5>
+                                        <p class="mb-0 text-muted">
+                                            <small>
+                                                <i class="fas fa-question-circle me-1"></i>
+                                                {{ quiz.questions.count }} Questions
+                                            </small>
+                                        </p>
+                                    </div>
+                                    <div class="quiz-arrow">
+                                        <i class="fas fa-chevron-right text-muted"></i>
                                     </div>
                                 </div>
                             </a>
@@ -31,6 +50,11 @@
                                 <img src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1188.jpg" 
                                      class="mb-3" width="200">
                                 <p class="lead">No quizzes available for this topic yet.</p>
+                                {% if user.is_authenticated and user.is_teacher %}
+                                    <a href="{% url 'quiz_app:create_quiz' %}" class="btn btn-primary">
+                                        <i class="fas fa-plus-circle me-2"></i>Create First Quiz
+                                    </a>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>
@@ -90,6 +114,14 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .quiz-arrow {
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    .quiz-item:hover .quiz-arrow {
+        opacity: 1;
+        transform: translateX(5px);
     }
 </style>
 {% endblock %} 
