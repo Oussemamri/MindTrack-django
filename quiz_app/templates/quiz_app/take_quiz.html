@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">{{ quiz.title }}</h2>
+            <p class="text-white-50 mb-0">Topic: {{ quiz.topic.name }}</p>
+        </div>
+        
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="question-container mb-4 p-4 border rounded bg-light">
+                        <h5 class="question-text mb-3">{{ field.label }}</h5>
+                        <div class="options-container">
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                            <div class="alert alert-danger mt-2">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Submit Quiz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .question-container {
+        transition: all 0.3s ease;
+    }
+    
+    .question-container:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .question-text {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .options-container input[type="radio"] {
+        margin-right: 10px;
+    }
+    
+    .options-container label {
+        display: block;
+        padding: 10px 15px;
+        margin: 5px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .options-container label:hover {
+        background-color: #f8f9fa;
+        border-color: #007bff;
+    }
+</style>
+{% endblock %} 

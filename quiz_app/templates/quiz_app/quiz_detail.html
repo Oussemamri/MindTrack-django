@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient text-white position-relative overflow-hidden"
+                     style="background: linear-gradient(45deg, #4b6cb7, #182848);">
+                    <div class="education-pattern"></div>
+                    <h2 class="mb-0">{{ quiz.title }}</h2>
+                    <p class="text-white-50 mb-0">Topic: {{ quiz.topic.name }}</p>
+                </div>
+                <div class="card-body text-center p-5">
+                    <img src="https://img.freepik.com/free-vector/quiz-word-concept_23-2147844150.jpg"
+                         class="mb-4" width="200">
+                    <h4 class="mb-4">Ready to Test Your Knowledge?</h4>
+                    <p class="text-muted mb-4">
+                        This quiz will test your understanding of {{ quiz.topic.name }}. 
+                        Make sure you have enough time to complete all questions.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'quiz_app:take_quiz' quiz.id %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-play-circle me-2"></i>Start Quiz
+                        </a>
+                        <a href="{% url 'quiz_app:quiz_list' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .education-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://img.freepik.com/free-vector/hand-drawn-education-science-pattern_23-2148494534.jpg');
+        opacity: 0.1;
+        background-size: cover;
+    }
+    .btn {
+        transition: all 0.3s ease;
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %} 

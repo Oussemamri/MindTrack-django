@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient text-white position-relative overflow-hidden" 
+                     style="background: linear-gradient(45deg, #4b6cb7, #182848);">
+                    <div class="education-pattern"></div>
+                    <h2 class="mb-0 position-relative">
+                        <i class="fas fa-graduation-cap me-2"></i>Knowledge Quest
+                    </h2>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for quiz in quizzes %}
+                            <a href="{% url 'quiz_app:quiz_detail' quiz.id %}" 
+                               class="list-group-item list-group-item-action quiz-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="quiz-icon me-3">
+                                        <i class="fas fa-book-reader fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">{{ quiz.title }}</h5>
+                                        <span class="badge bg-primary rounded-pill">{{ quiz.topic.name }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <div class="text-center p-5">
+                                <img src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1188.jpg" 
+                                     class="mb-3" width="200">
+                                <p class="lead">No quizzes available yet.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .education-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://img.freepik.com/free-vector/hand-drawn-education-science-pattern_23-2148494534.jpg');
+        opacity: 0.1;
+        background-size: cover;
+    }
+    .quiz-item {
+        transition: all 0.3s ease;
+        border: none;
+        margin: 5px 0;
+        border-radius: 10px;
+    }
+    .quiz-item:hover {
+        transform: translateX(10px);
+        background-color: #f8f9fa;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .quiz-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(75, 108, 183, 0.1);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+    .quiz-item:hover .quiz-icon {
+        transform: rotate(360deg);
+    }
+</style>
+{% endblock %} 

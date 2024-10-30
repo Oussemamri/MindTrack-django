@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Quiz Results</h2>
+        </div>
+        
+        <div class="card-body text-center">
+            <div class="score-circle mb-4">
+                {{ submission.score }}%
+            </div>
+            
+            <h3 class="card-title mb-3">{{ submission.quiz.title }}</h3>
+            <p class="text-muted">Completed on {{ submission.submitted_at|date:"F j, Y, g:i a" }}</p>
+            
+            <div class="result-message mt-4">
+                {% if submission.score >= 80 %}
+                    <div class="alert alert-success">
+                        <h4>Excellent work! 🎉</h4>
+                        <p>You've demonstrated outstanding knowledge!</p>
+                    </div>
+                {% elif submission.score >= 60 %}
+                    <div class="alert alert-info">
+                        <h4>Good job! 👍</h4>
+                        <p>You're on the right track!</p>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <h4>Keep practicing! 💪</h4>
+                        <p>There's room for improvement.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-4">
+                <a href="{% url 'quiz_app:quiz_list' %}" class="btn btn-primary btn-lg">
+                    Back to Quizzes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .score-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #007bff, #00ff88);
+        color: white;
+        font-size: 2.5em;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .alert {
+        border-radius: 10px;
+    }
+    
+    .btn-primary {
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+    }
+</style>
+{% endblock %} 
