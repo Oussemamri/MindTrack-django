@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient text-white position-relative overflow-hidden"
+                     style="background: linear-gradient(45deg, #4b6cb7, #182848);">
+                    <div class="education-pattern"></div>
+                    <h2 class="mb-0">{{ path.title }}</h2>
+                    <p class="text-white-50 mb-0">Created by: {{ path.creator.username }}</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <img src="https://img.freepik.com/free-vector/learning-concept-illustration_114360-6186.jpg"
+                             class="mb-4" width="200">
+                        <p class="text-muted">{{ path.description }}</p>
+                    </div>
+
+                    <div class="path-topics mb-4">
+                        <h4 class="mb-3"><i class="fas fa-list-ol me-2"></i>Path Topics</h4>
+                        {% for path_topic in path.pathtopic_set.all %}
+                            <div class="card mb-3 topic-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">{{ path_topic.topic.name }}</h5>
+                                            <small class="text-muted">
+                                                Required Quizzes: {{ path_topic.required_quizzes.count }}
+                                            </small>
+                                        </div>
+                                        <span class="badge bg-primary rounded-pill">
+                                            Step {{ path_topic.order }}
+                                        </span>
+                                    </div>
+                                    
+                                    {% if path_topic.required_quizzes.exists %}
+                                        <div class="mt-3">
+                                            <h6 class="mb-2">Required Quizzes:</h6>
+                                            <div class="list-group">
+                                                {% for quiz in path_topic.required_quizzes.all %}
+                                                    <a href="{% url 'quiz_app:quiz_detail' quiz.id %}" 
+                                                       class="list-group-item list-group-item-action">
+                                                        <i class="fas fa-book-reader me-2"></i>{{ quiz.title }}
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        {% if user == path.creator %}
+                            <div class="d-flex justify-content-center gap-3 mb-4">
+                                <a href="{% url 'learning_paths:edit_path' path.id %}" class="btn btn-warning">
+                                    <i class="fas fa-edit me-2"></i>Edit Path
+                                </a>
+                                <a href="{% url 'learning_paths:delete_path' path.id %}" class="btn btn-danger">
+                                    <i class="fas fa-trash-alt me-2"></i>Delete Path
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if not user_enrolled %}
+                            <form method="post" action="{% url 'learning_paths:enroll_path' path.id %}" class="d-grid gap-2">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-play-circle me-2"></i>Start Learning Path
+                                </button>
+                            </form>
+                        {% else %}
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'learning_paths:continue_path' path.id %}" class="btn btn-success btn-lg">
+                                    <i class="fas fa-forward me-2"></i>Continue Learning
+                                </a>
+                                <div class="progress mb-2" style="height: 20px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {{ user_progress.completion_percentage }}%;"
+                                         aria-valuenow="{{ user_progress.completion_percentage }}" 
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        {{ user_progress.completion_percentage }}%
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <a href="{% url 'learning_paths:path_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Paths
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .education-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://img.freepik.com/free-vector/hand-drawn-education-science-pattern_23-2148494534.jpg');
+        opacity: 0.1;
+        background-size: cover;
+    }
+    .topic-card {
+        transition: all 0.3s ease;
+    }
+    .topic-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .btn {
+        transition: all 0.3s ease;
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(75, 108, 183, 0.4);
+    }
+</style>
+{% endblock %}

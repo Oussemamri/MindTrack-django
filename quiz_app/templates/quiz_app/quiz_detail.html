@@ -19,6 +19,16 @@
                         This quiz will test your understanding of {{ quiz.topic.name }}. 
                         Make sure you have enough time to complete all questions.
                     </p>
+                    {% if user.is_authenticated and user.is_teacher %}
+                        <div class="d-flex justify-content-center gap-3 mb-4">
+                            <a href="{% url 'quiz_app:edit_quiz' quiz.id %}" class="btn btn-warning">
+                                <i class="fas fa-edit me-2"></i>Edit Quiz
+                            </a>
+                            <a href="{% url 'quiz_app:delete_quiz' quiz.id %}" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-2"></i>Delete Quiz
+                            </a>
+                        </div>
+                    {% endif %}
                     <div class="d-flex justify-content-center gap-3">
                         <a href="{% url 'quiz_app:take_quiz' quiz.id %}" class="btn btn-primary btn-lg">
                             <i class="fas fa-play-circle me-2"></i>Start Quiz

@@ -3,28 +3,28 @@
 {% block content %}
 <div class="container mt-5">
     <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-gradient text-white" 
+             style="background: linear-gradient(45deg, #4b6cb7, #182848);">
             <h2 class="mb-0">Quiz Results</h2>
         </div>
-        
-        <div class="card-body text-center">
+        <div class="card-body text-center p-5">
             <div class="score-circle mb-4">
-                {{ submission.score }}%
+                {{ score|floatformat:0 }}%
             </div>
             
-            <h3 class="card-title mb-3">{{ submission.quiz.title }}</h3>
-            <p class="text-muted">Completed on {{ submission.submitted_at|date:"F j, Y, g:i a" }}</p>
+            <h3 class="mb-3">{{ quiz.title }}</h3>
+            <p class="text-muted mb-4">Completed on {{ quiz.attempts.last.completed_at|date:"F j, Y" }}</p>
             
-            <div class="result-message mt-4">
-                {% if submission.score >= 80 %}
+            <div class="mb-4">
+                {% if score >= 80 %}
                     <div class="alert alert-success">
                         <h4>Excellent work! 🎉</h4>
-                        <p>You've demonstrated outstanding knowledge!</p>
+                        <p>You've mastered this topic!</p>
                     </div>
-                {% elif submission.score >= 60 %}
+                {% elif score >= 60 %}
                     <div class="alert alert-info">
                         <h4>Good job! 👍</h4>
-                        <p>You're on the right track!</p>
+                        <p>You're making good progress.</p>
                     </div>
                 {% else %}
                     <div class="alert alert-warning">
@@ -35,9 +35,15 @@
             </div>
             
             <div class="mt-4">
-                <a href="{% url 'quiz_app:quiz_list' %}" class="btn btn-primary btn-lg">
-                    Back to Quizzes
-                </a>
+                {% if request.GET.from_path %}
+                    <a href="{% url 'learning_paths:continue_path' request.GET.from_path %}" class="btn btn-primary btn-lg">
+                        Continue Learning Path
+                    </a>
+                {% else %}
+                    <a href="{% url 'quiz_app:quiz_list' %}" class="btn btn-primary btn-lg">
+                        Back to Quizzes
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

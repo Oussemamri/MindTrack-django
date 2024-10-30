@@ -83,6 +83,23 @@
             color: #2c3e50;
             margin-bottom: 0.5rem;
         }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 0.5rem;
+        }
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .dropdown-item:hover {
+            background: linear-gradient(45deg, #4b6cb7, #182848);
+            color: white;
+        }
+        .dropdown-item i {
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -112,29 +129,26 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="topicsDropdown" role="button" 
-                           data-bs-toggle="dropdown">
-                            <i class="fas fa-tags me-1"></i>Topics
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-book me-1"></i>Topics
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}?topic=linux">
-                                <i class="fab fa-linux me-2"></i>Linux
-                            </a></li>
-                            <li><a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}?topic=devops">
-                                <i class="fas fa-cogs me-2"></i>DevOps
-                            </a></li>
-                            <li><a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}?topic=docker">
-                                <i class="fab fa-docker me-2"></i>Docker
-                            </a></li>
-                            <li><a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}?topic=code">
-                                <i class="fas fa-code me-2"></i>Programming
-                            </a></li>
-                            <li><a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}?topic=sql">
-                                <i class="fas fa-database me-2"></i>SQL
-                            </a></li>
-                            <li><a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}?topic=cms">
-                                <i class="fas fa-globe me-2"></i>CMS
-                            </a></li>
+                        <ul class="dropdown-menu" aria-labelledby="topicsDropdown">
+                            {% for topic in topics %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'quiz_app:topic_detail' topic.slug %}">
+                                    <i class="fas fa-chevron-right me-2"></i>{{ topic.name }}
+                                    <span class="badge bg-primary rounded-pill float-end">
+                                        {{ topic.quiz_set.count }}
+                                    </span>
+                                </a>
+                            </li>
+                            {% endfor %}
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-trophy me-1"></i>Knowledge Quest
+                        </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

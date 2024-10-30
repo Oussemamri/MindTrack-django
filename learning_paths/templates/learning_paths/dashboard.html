@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ user.profile_image|default:'https://via.placeholder.com/50' }}" 
+                             class="rounded-circle me-2" width="50" height="50">
+                        <div>
+                            <h5 class="mb-0">{{ user.username }}</h5>
+                            <small class="text-muted">{{ user.email }}</small>
+                        </div>
+                    </div>
+                    <div class="list-group">
+                        <a href="{% url 'learning_paths:dashboard' %}" class="list-group-item list-group-item-action active">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a href="{% url 'learning_paths:create_path' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-plus-circle me-2"></i>Create Path
+                        </a>
+                        <a href="{% url 'quiz_app:create_quiz' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-question-circle me-2"></i>Create Quiz
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- AI Assistant Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">AI Learning Assistant</h4>
+                    <button class="btn btn-primary btn-sm" id="toggleAI">
+                        <i class="fas fa-robot me-2"></i>Ask AI
+                    </button>
+                </div>
+                <div class="card-body" id="aiChat" style="display: none;">
+                    <div class="chat-container mb-3" style="height: 300px; overflow-y: auto;">
+                        <div id="chatMessages"></div>
+                    </div>
+                    <form id="aiForm" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="text" class="form-control" id="userInput" 
+                               placeholder="Ask about creating paths, quizzes, or learning strategies...">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Created Paths</h5>
+                            <h2>{{ created_paths_count }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-success text-white shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Active Enrollments</h5>
+                            <h2>{{ active_enrollments_count }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-info text-white shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Completed Paths</h5>
+                            <h2>{{ completed_paths_count }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your Learning Paths -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Your Learning Paths</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Topics</th>
+                                    <th>Enrollments</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for path in created_paths %}
+                                <tr>
+                                    <td>{{ path.title }}</td>
+                                    <td>{{ path.topics.count }}</td>
+                                    <td>{{ path.pathenrollment_set.count }}</td>
+                                    <td>
+                                        {% if path.is_published %}
+                                            <span class="badge bg-success">Published</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Draft</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{% url 'learning_paths:edit_path' path.id %}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'learning_paths:path_detail' path.id %}" 
+                                               class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chat-container {
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.chat-message {
+    max-width: 80%;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.chat-message.user {
+    background-color: #e3f2fd;
+    margin-left: auto;
+}
+
+.chat-message.assistant {
+    background-color: #f5f5f5;
+    margin-right: auto;
+}
+
+.chat-message.error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+#aiForm {
+    margin-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    padding-top: 1rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggleAI');
+    const aiChat = document.getElementById('aiChat');
+    const aiForm = document.getElementById('aiForm');
+    const chatMessages = document.getElementById('chatMessages');
+    
+    toggleBtn.addEventListener('click', function() {
+        aiChat.style.display = aiChat.style.display === 'none' ? 'block' : 'none';
+        if (aiChat.style.display === 'block' && chatMessages.children.length === 0) {
+            appendMessage('assistant', 'Hi! How can I help you with your learning journey?');
+        }
+    });
+    
+    aiForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const input = document.getElementById('userInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        input.value = '';
+        appendMessage('user', message);
+        
+        try {
+            const response = await fetch('/paths/ai-assistant/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: `message=${encodeURIComponent(message)}`
+            });
+            
+            const data = await response.json();
+            appendMessage('assistant', data.response);
+            
+        } catch (error) {
+            appendMessage('error', 'Sorry, I could not process your request.');
+        }
+    });
+    
+    function appendMessage(role, content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${role} mb-2 p-2 rounded`;
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-start gap-2">
+                <i class="fas ${role === 'user' ? 'fa-user' : 'fa-robot'} mt-1"></i>
+                <div style="white-space: pre-line">${content}</div>
+            </div>
+        `;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+});
+</script>
+{% endblock %} 

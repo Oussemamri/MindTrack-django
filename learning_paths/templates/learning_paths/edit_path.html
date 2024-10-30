@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient text-white" 
+                     style="background: linear-gradient(45deg, #4b6cb7, #182848);">
+                    <h2 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Learning Path</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{{ form.title.label }}</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{{ form.description.label }}</label>
+                            {{ form.description }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{{ form.is_published.label }}</label>
+                            {{ form.is_published }}
+                        </div>
+                        
+                        <h4 class="mb-3 mt-4">Path Topics</h4>
+                        {{ formset.management_form }}
+                        <div id="topic-formset">
+                            {% for topic_form in formset %}
+                                <div class="card mb-3 topic-form">
+                                    <div class="card-body">
+                                        {{ topic_form.id }}
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-bold">{{ topic_form.topic.label }}</label>
+                                                {{ topic_form.topic }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-bold">{{ topic_form.order.label }}</label>
+                                                {{ topic_form.order }}
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Required Quizzes</label>
+                                            {{ topic_form.required_quizzes }}
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">{{ topic_form.completion_threshold.label }}</label>
+                                            <div class="input-group">
+                                                {{ topic_form.completion_threshold }}
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <small class="text-muted">Required score to complete this topic's quizzes</small>
+                                        </div>
+                                        {% if topic_form.instance.pk %}
+                                            <div class="form-check">
+                                                {{ topic_form.DELETE }}
+                                                <label class="form-check-label text-danger">Delete this topic</label>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-primary" id="add-topic">
+                                <i class="fas fa-plus me-2"></i>Add Topic
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'learning_paths:path_detail' path.id %}" 
+                               class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #4b6cb7;
+        box-shadow: 0 0 0 0.25rem rgba(75, 108, 183, 0.25);
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #4b6cb7, #182848);
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(75, 108, 183, 0.4);
+    }
+</style>
+
+<script>
+    document.getElementById('add-topic').addEventListener('click', function() {
+        const formset = document.getElementById('topic-formset');
+        const forms = formset.getElementsByClassName('topic-form');
+        const newForm = forms[0].cloneNode(true);
+        
+        const totalForms = document.getElementById('id_pathtopic_set-TOTAL_FORMS');
+        const index = forms.length;
+        totalForms.value = index + 1;
+        
+        newForm.querySelectorAll('input:not([type=hidden]), select').forEach(input => {
+            input.value = '';
+            input.name = input.name.replace('-0-', `-${index}-`);
+            input.id = input.id.replace('-0-', `-${index}-`);
+        });
+        
+        formset.appendChild(newForm);
+    });
+</script>
+{% endblock %}
