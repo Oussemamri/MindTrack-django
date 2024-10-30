@@ -4,12 +4,11 @@ from django.db import models
 # Create your models here.
 
 class User(AbstractUser):
-    ROLE_CHOICES = [
+    ROLES = (
         ('student', 'Student'),
         ('teacher', 'Teacher'),
-    ]
-    
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student')
+    )
+    role = models.CharField(max_length=10, choices=ROLES, default='student')
     bio = models.TextField(max_length=500, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)

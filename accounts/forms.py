@@ -4,8 +4,13 @@ from .models import User
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    role = forms.ChoiceField(choices=User.ROLE_CHOICES)
+    role = forms.ChoiceField(choices=User.ROLES)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', 'role') 
+        fields = ("username", "email", "password1", "password2", "role")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control' 

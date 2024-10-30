@@ -1,39 +1,52 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-6 mx-auto">
-            <div class="card shadow-lg">
-                <div class="card-header bg-gradient text-white position-relative overflow-hidden"
-                     style="background: linear-gradient(45deg, #4b6cb7, #182848);">
-                    <h2 class="mb-0"><i class="fas fa-user-plus me-2"></i>Register</h2>
-                </div>
-                <div class="card-body p-4">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <img src="{% static 'images/mindtrack-logo.png' %}" 
+                             alt="MindTrack Logo" class="mb-3" style="width: 180px;">
+                        <h2 class="fw-bold text-primary">Join Our Community!</h2>
+                        <p class="text-muted">Start your learning adventure today</p>
+                    </div>
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password1" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Confirm Password</label>
-                            <input type="password" name="password2" class="form-control" required>
+                        <div class="mb-4">
+                            <div class="form-floating">
+                                <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
+                                <label for="username"><i class="fas fa-user text-muted me-2"></i>Username</label>
+                            </div>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label">Role</label>
-                            <select name="role" class="form-select" required>
-                                <option value="student">Student</option>
-                                <option value="teacher">Teacher</option>
-                            </select>
+                            <div class="form-floating">
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                                <label for="email"><i class="fas fa-envelope text-muted me-2"></i>Email</label>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-floating">
+                                <input type="password" name="password1" class="form-control" id="password1" placeholder="Password" required>
+                                <label for="password1"><i class="fas fa-lock text-muted me-2"></i>Password</label>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-floating">
+                                <input type="password" name="password2" class="form-control" id="password2" placeholder="Confirm Password" required>
+                                <label for="password2"><i class="fas fa-lock text-muted me-2"></i>Confirm Password</label>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-floating">
+                                <select name="role" class="form-select" id="role" required>
+                                    <option value="student">Student</option>
+                                    <option value="teacher">Teacher</option>
+                                </select>
+                                <label for="role"><i class="fas fa-user-graduate text-muted me-2"></i>Role</label>
+                            </div>
                         </div>
                         {% if form.errors %}
                             <div class="alert alert-danger">
@@ -51,11 +64,60 @@
                         </div>
                     </form>
                     <div class="text-center mt-4">
-                        <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+                        <p>Already have an account? <a href="{% url 'accounts:login' %}" class="text-primary fw-bold">Login here</a></p>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 d-none d-lg-block">
+            <div class="position-relative">
+                <img src="https://img.freepik.com/free-vector/education-pattern-background-doodle-style_53876-115365.jpg" 
+                     class="img-fluid rounded-4 shadow-lg opacity-25 education-bg" alt="Education Pattern">
+                <img src="https://img.freepik.com/free-vector/teaching-concept-illustration_114360-1708.jpg" 
+                     class="img-fluid position-absolute top-50 start-50 translate-middle floating-img" 
+                     style="max-width: 80%; z-index: 2;" alt="Teaching">
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 1rem 0.75rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #4b6cb7;
+        box-shadow: 0 0 0 0.25rem rgba(75, 108, 183, 0.25);
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #4b6cb7, #182848);
+        border: none;
+        border-radius: 10px;
+        padding: 15px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(75, 108, 183, 0.4);
+    }
+    .floating-img {
+        animation: float 6s ease-in-out infinite;
+    }
+    .education-bg {
+        animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes float {
+        0% { transform: translate(-50%, -50%); }
+        50% { transform: translate(-50%, -45%); }
+        100% { transform: translate(-50%, -50%); }
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+</style>
 {% endblock %} 

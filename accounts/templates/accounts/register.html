@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <h1 class="text-center mb-4">
+                        <i class="fas fa-user-plus text-primary me-2"></i>Join Us
+                    </h1>
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="mb-4">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ field.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>Register
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-4">
+                        <p>Already have an account? <a href="{% url 'accounts:login' %}" class="text-primary">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-block">
+            <div class="text-center">
+                <img src="https://img.freepik.com/free-vector/education-science-concept-illustration_114360-1607.jpg" 
+                     class="img-fluid rounded-circle shadow-lg" alt="Education Science">
+                <div class="position-relative">
+                    <img src="https://img.freepik.com/free-vector/online-learning-concept-illustration_114360-4735.jpg" 
+                         class="img-fluid position-absolute top-0 start-50 translate-middle-x" 
+                         style="max-width: 80%; margin-top: -30%;" alt="Online Learning">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #4b6cb7;
+        box-shadow: 0 0 0 0.25rem rgba(75, 108, 183, 0.25);
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #4b6cb7, #182848);
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(75, 108, 183, 0.4);
+    }
+</style>
+{% endblock %} 
