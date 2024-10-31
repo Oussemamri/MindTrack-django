@@ -1,0 +1,100 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fas fa-brain me-2"></i>MindTrack
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-clock me-2"></i>Study Sessions
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'study_sessions:session_list' %}">All Sessions</a></li>
+                        <li><a class="dropdown-item" href="{% url 'study_sessions:session_create' %}">Start New Session</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-question-circle me-2"></i>Quizzes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}">All Quizzes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'quiz_app:create_quiz' %}">Create Quiz</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-road me-2"></i>Learning Paths
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'learning_paths:dashboard' %}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{% url 'learning_paths:create_path' %}">Create Path</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-2"></i>{{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'accounts:logout' %}" class="px-2">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link text-danger p-0 w-100 text-start">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .navbar {
+        background: linear-gradient(135deg, #1a1a1a, #2d3436) !important;
+        padding: 1rem 0;
+    }
+
+    .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-radius: 12px;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+</style> 

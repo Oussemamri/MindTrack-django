@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('paths/', include('learning_paths.urls', namespace='learning_paths')),
-
-    path('', include('quiz_app.urls')),
-    path('study-sessions/', include('study_sessions.urls')),
+    path('quiz/', include('quiz_app.urls', namespace='quiz_app')),
+    path('study-sessions/', include('study_sessions.urls', namespace='study_sessions')),
+    path('', views.home, name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

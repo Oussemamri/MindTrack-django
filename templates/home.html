@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-5 home-container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Hero Section -->
+            <div class="text-center hero-section mb-5">
+                <h1 class="mega-title text-gradient mb-3">Welcome to MindTrack</h1>
+                <p class="lead text-muted animated-text">Your comprehensive learning management platform</p>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="row g-4">
+                <!-- Study Sessions Card -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                        <h3>Study Sessions</h3>
+                        <p>Track your learning progress and manage study activities effectively</p>
+                        <a href="{% url 'study_sessions:session_list' %}" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-arrow-right me-2"></i>Start Learning
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quiz Module Card -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-icon bg-success">
+                            <i class="fas fa-question-circle fa-2x"></i>
+                        </div>
+                        <h3>Quizzes</h3>
+                        <p>Test your knowledge with interactive quizzes</p>
+                        <a href="{% url 'quiz_app:quiz_list' %}" class="btn btn-success btn-lg w-100">
+                            <i class="fas fa-brain me-2"></i>Take Quiz
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Learning Paths Card -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="card-icon bg-info">
+                            <i class="fas fa-road fa-2x"></i>
+                        </div>
+                        <h3>Learning Paths</h3>
+                        <p>Create and follow structured learning paths</p>
+                        <a href="{% url 'learning_paths:path_list' %}" class="btn btn-info btn-lg w-100">
+                            <i class="fas fa-map-signs me-2"></i>View Paths
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .home-container {
+        background: linear-gradient(135deg, #1a1a1a, #2d3436);
+        min-height: 100vh;
+        color: white;
+    }
+
+    .text-gradient {
+        background: linear-gradient(45deg, #00f2fe, #4facfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .feature-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .card-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-bottom: 1.5rem;
+    }
+
+    .animated-text {
+        animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %} 
