@@ -9,15 +9,15 @@ MindTrack is a comprehensive learning management platform designed to help users
 Here are some screenshots of the MindTrack application:
 
 ### Dashboard View
-![Dashboard View](/screenshots/dashboard.png)
+![Dashboard View](/screenshots/Dashboard%20View.png)
 *The main dashboard showing learning progress, recent activities, and quick access to features.*
 
 ### Learning Path Interface
-![Learning Path](/screenshots/learning_path.png)
+![Learning Path](/screenshots/Learning%20Path.png)
 *The learning path interface showing topic progression and quiz requirements.*
 
 ### AI Assistant
-![AI Assistant](/screenshots/ai_assistant.png)
+![AI Assistant](/screenshots/AI%20Assistant.png)
 *The AI Learning Assistant providing personalized recommendations and answers.*
 
 ## 🌟 Features
