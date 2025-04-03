@@ -112,9 +112,9 @@
          class="floating-image book-2" width="200">
     
     <!-- Rest of your base template content -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'quiz_app:quiz_list' %}">
+            <a class="navbar-brand" href="{% url 'home' %}">
                 <i class="fas fa-graduation-cap me-2"></i>MindTrack
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -123,16 +123,54 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'quiz_app:quiz_list' %}">
-                            <i class="fas fa-list me-1"></i>All Quizzes
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home me-1"></i>Home
                         </a>
                     </li>
+                    
+                    <!-- Learning Paths Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="topicsDropdown" role="button" 
+                        <a class="nav-link dropdown-toggle" href="#" id="pathsDropdown" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-book me-1"></i>Topics
+                            <i class="fas fa-route me-1"></i>Learning Paths
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="topicsDropdown">
+                        <ul class="dropdown-menu" aria-labelledby="pathsDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'learning_paths:path_list' %}">
+                                    <i class="fas fa-list me-2"></i>Browse Paths
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'learning_paths:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                                </a>
+                            </li>
+                            {% if user.is_authenticated and user.is_teacher %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'learning_paths:create_path' %}">
+                                    <i class="fas fa-plus-circle me-2"></i>Create Path
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    
+                    <!-- Quizzes Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="quizzesDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-question-circle me-1"></i>Quizzes
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="quizzesDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'quiz_app:quiz_list' %}">
+                                    <i class="fas fa-list me-2"></i>All Quizzes
+                                </a>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <h6 class="dropdown-header">Topics</h6>
+                            </li>
                             {% for topic in topics %}
                             <li>
                                 <a class="dropdown-item" href="{% url 'quiz_app:topic_detail' topic.slug %}">
@@ -143,33 +181,67 @@
                                 </a>
                             </li>
                             {% endfor %}
+                            
+                            {% if user.is_authenticated and user.is_teacher %}
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'quiz_app:create_quiz' %}">
+                                    <i class="fas fa-plus-circle me-2"></i>Create Quiz
+                                </a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </li>
+                    
+                    <!-- Study Sessions -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-trophy me-1"></i>Knowledge Quest
+                        <a class="nav-link" href="{% url 'study_sessions:list' %}">
+                            <i class="fas fa-stopwatch me-1"></i>Study Sessions
+                        </a>
+                    </li>
+                    
+                    <!-- AI Assistant -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'learning_paths:ai_assistant' %}">
+                            <i class="fas fa-robot me-1"></i>AI Assistant
                         </a>
                     </li>
                 </ul>
+                
+                <!-- User Menu -->
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'quiz_app:create_quiz' %}">
-                                <i class="fas fa-plus-circle me-1"></i>Create Quiz
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>{{ user.username }}
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn nav-link border-0 bg-transparent">
-                                    <i class="fas fa-sign-out-alt me-1"></i>Logout
-                                </button>
-                            </form>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'learning_paths:dashboard' %}">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                </li>
+                                <li class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'accounts:login' %}">
                                 <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:register' %}">
+                                <i class="fas fa-user-plus me-1"></i>Register
                             </a>
                         </li>
                     {% endif %}
@@ -204,4 +276,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

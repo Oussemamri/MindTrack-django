@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-gradient mb-3">
+                    <i class="fas fa-robot me-3"></i>AI Learning Assistant
+                </h1>
+                <p class="lead text-muted">Get personalized learning recommendations and answers to your questions</p>
+            </div>
+            
+            <!-- AI Chat Interface -->
+            <div class="card shadow-lg border-0 mb-5">
+                <div class="card-body p-4">
+                    <!-- Chat History -->
+                    <div class="chat-container mb-4" id="chatContainer">
+                        {% if chat_history %}
+                            {% for entry in chat_history %}
+                                <div class="chat-message user-message mb-3">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-text">{{ entry.query }}</div>
+                                        <div class="message-time">You - {{ entry.timestamp }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="chat-message ai-message">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-text">{{ entry.response }}</div>
+                                        <div class="message-time">AI Assistant - {{ entry.timestamp }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center p-5">
+                                <img src="https://img.freepik.com/free-vector/artificial-intelligence-concept-illustration_114360-7000.jpg" 
+                                     class="img-fluid mb-4" style="max-width: 200px;" alt="AI Assistant">
+                                <p class="lead">Ask me anything about learning paths, study techniques, or specific topics!</p>
+                                <p class="text-muted small">I can recommend resources, create study plans, or explain concepts.</p>
+                                
+                                <div class="suggested-questions mt-4">
+                                    <p class="fw-bold">Try asking:</p>
+                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                        {% for question in suggested_questions %}
+                                            <button class="btn btn-outline-primary btn-sm suggestion-btn" 
+                                                    onclick="fillQuestion('{{ question }}')">
+                                                {{ question }}
+                                            </button>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if error %}
+                            <div class="alert alert-danger mt-3">{{ error }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <form method="post" class="chat-input" id="chatForm">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" name="query" id="queryInput" class="form-control form-control-lg" 
+                                   placeholder="Ask a question or describe what you want to learn..." required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- AI Features -->
+            <div class="row g-4 mt-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <h4>Learning Path Creation</h4>
+                        <p>Get a customized learning roadmap tailored to your goals and current knowledge level.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h4>Q&A Support</h4>
+                        <p>Ask specific questions about topics you're studying to deepen your understanding.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h4>Study Planning</h4>
+                        <p>Get help creating effective study schedules based on your availability and learning style.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to scroll to bottom of chat container
+    function scrollToBottom() {
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // Function to fill question from suggestion buttons
+    function fillQuestion(question) {
+        document.getElementById('queryInput').value = question;
+        document.getElementById('queryInput').focus();
+    }
+    
+    // Scroll to bottom when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        scrollToBottom();
+        
+        // Scroll to bottom after form submission
+        document.getElementById('chatForm').addEventListener('submit', function() {
+            // Small timeout to allow DOM to update before scrolling
+            setTimeout(scrollToBottom, 100);
+        });
+    });
+</script>
+
+<style>
+    .text-gradient {
+        background: linear-gradient(45deg, #4b6cb7, #182848);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .chat-container {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        height: 500px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+    
+    .chat-message {
+        display: flex;
+        margin-bottom: 15px;
+    }
+    
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    
+    .ai-message .message-avatar {
+        background: linear-gradient(45deg, #4b6cb7, #182848);
+        color: white;
+    }
+    
+    .message-content {
+        flex: 1;
+    }
+    
+    .message-text {
+        background: white;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .ai-message .message-text {
+        background: #f0f7ff;
+    }
+    
+    .message-time {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(75, 108, 183, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 1.5rem;
+        color: #4b6cb7;
+    }
+    
+    .suggestion-btn {
+        transition: all 0.3s ease;
+    }
+    
+    .suggestion-btn:hover {
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}

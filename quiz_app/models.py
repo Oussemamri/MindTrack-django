@@ -8,15 +8,6 @@ class Topic(models.Model):
         ('docker', 'Docker'),
         ('code', 'Programming'),
         ('sql', 'SQL'),
-        ('cms', 'CMS'),
-        ('math', 'Mathematics'),
-        ('history', 'History'),
-        ('science', 'Science'),
-        ('geography', 'Geography'),
-        ('literature', 'Literature'),
-        ('physics', 'Physics'),
-        ('chemistry', 'Chemistry'),
-        ('biology', 'Biology'),
     ]
     
     name = models.CharField(max_length=200, choices=CATEGORY_CHOICES)

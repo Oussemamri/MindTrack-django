@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from quiz_app.views import home
 
 urlpatterns = [
+    path('', home, name='home'),  # Add this line for the home page
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('paths/', include('learning_paths.urls', namespace='learning_paths')),
-
-    path('', include('quiz_app.urls')),
+    path('quizzes/', include('quiz_app.urls')),  # Changed from '' to 'quizzes/'
     path('study-sessions/', include('study_sessions.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

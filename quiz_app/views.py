@@ -169,3 +169,8 @@ def topic_detail(request, slug):
         'quizzes': topic.quiz_set.all()  # Explicitly pass quizzes to template
     }
     return render(request, 'quiz_app/topic_detail.html', context)
+
+def home(request):
+    """Home page view for MindTrack."""
+    topics = Topic.objects.all()
+    return render(request, 'home.html', {'topics': topics})

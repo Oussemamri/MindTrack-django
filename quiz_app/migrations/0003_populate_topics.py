@@ -8,15 +8,6 @@ def populate_topics(apps, schema_editor):
         ('docker', 'Docker containerization'),
         ('code', 'General programming concepts'),
         ('sql', 'Database and SQL queries'),
-        ('cms', 'Content Management Systems'),
-        ('math', 'Mathematics concepts and problems'),
-        ('history', 'World history and events'),
-        ('science', 'General science topics'),
-        ('geography', 'World geography and cultures'),
-        ('literature', 'Literary works and analysis'),
-        ('physics', 'Physics principles and theories'),
-        ('chemistry', 'Chemical concepts and reactions'),
-        ('biology', 'Life sciences and organisms'),
     ]
     
     for name, description in topics_data:
@@ -39,4 +30,4 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(populate_topics, reverse_populate),
-    ] 
+    ]

@@ -185,9 +185,77 @@ def dashboard(request):
 
 @login_required
 def ai_assistant(request):
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    """AI Assistant view for learning path recommendations and Q&A."""
     
-    user_input = request.POST.get('message', '')
-    response = SimpleAI.get_response(user_input)
-    return JsonResponse({'response': response})
+    # Get or initialize session chat history
+    chat_history = request.session.get('chat_history', [])
+    
+    # Initialize context with default values
+    context = {
+        'chat_history': chat_history,
+        'error': None,
+        'suggested_questions': [
+            "How can I learn Python programming?",
+            "What are the best study techniques?",
+            "Can you create a learning path for web development?",
+            "Help me understand calculus basics",
+            "What resources do you recommend for data science?"
+        ]
+    }
+    
+    # Process form submission (POST request)
+    if request.method == 'POST':
+        query = request.POST.get('query', '').strip()
+        
+        # Validate the query
+        if not query:
+            context['error'] = "Please enter a question or topic to get assistance."
+        else:
+            try:
+                # Process greeting messages
+                greeting_responses = {
+                    "hi": "Hello! How can I help with your learning journey today?",
+                    "hello": "Hi there! I'm your AI learning assistant. What would you like to learn about?",
+                    "hey": "Hey! Ready to help you with your educational goals. What's on your mind?",
+                    "hi there": "Hello! I'm here to help you learn. What topic are you interested in?",
+                    "hello there": "Hi! I'm excited to assist with your learning. What can I help you with today?"
+                }
+                
+                # Topic-specific canned responses
+                ai_responses = {
+                    "learn python": "To learn Python, I recommend starting with basic syntax and concepts like variables, data types, and control structures. Then move on to functions, classes, and modules. Practice with small projects like a calculator or a to-do list app.",
+                    "study tips": "Some effective study techniques include: 1) Spaced repetition, 2) Active recall, 3) Pomodoro technique (25min study, 5min break), 4) Teaching concepts to others, and 5) Creating mind maps or visual aids.",
+                    "math help": "For mathematics, build a strong foundation in basics before advancing. Use resources like Khan Academy for free lessons and practice problems. Consider joining study groups or finding a tutor for challenging topics.",
+                    "learning path": "I can help create a learning path tailored to your goals. What specific field or topic are you interested in learning? For example, web development, data science, or a particular language?",
+                    "web development": "For web development, I recommend starting with HTML/CSS basics, then learning JavaScript. After that, explore frontend frameworks like React or Vue, and backend technologies like Node.js, Django, or Flask.",
+                    "data science": "To learn data science, start with Python programming, then study statistics and probability. Next, learn data manipulation with pandas, visualization with matplotlib/seaborn, and finally machine learning with scikit-learn."
+                }
+                
+                # Check for greetings first
+                query_lower = query.lower()
+                if query_lower in greeting_responses:
+                    response = greeting_responses[query_lower]
+                else:
+                    # Check if the query contains any keywords from our topic responses
+                    response = "I don't have specific information on that topic yet. Please try asking about Python learning, study tips, or math help."
+                    for key, value in ai_responses.items():
+                        if key in query_lower:
+                            response = value
+                            break
+                
+                # Add to chat history
+                chat_entry = {
+                    'query': query, 
+                    'response': response,
+                    'timestamp': timezone.now().strftime("%H:%M")
+                }
+                chat_history.append(chat_entry)
+                
+                # Store updated history in session
+                request.session['chat_history'] = chat_history
+                context['chat_history'] = chat_history
+                
+            except Exception as e:
+                context['error'] = f"Sorry, I encountered an error: {str(e)}"
+    
+    return render(request, 'learning_paths/ai_assistant.html', context)

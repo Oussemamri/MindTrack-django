@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4 text-gradient">Welcome to <span class="text-primary">MindTrack</span></h1>
+                <p class="lead mb-4">Your comprehensive learning platform to track, manage, and enhance your educational journey.</p>
+                <div class="d-flex gap-3 mb-5">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'learning_paths:dashboard' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Join Now
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'quiz_app:quiz_list' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-book-reader me-2"></i>Browse Quizzes
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://img.freepik.com/free-vector/online-learning-isometric-concept_1284-17947.jpg" 
+                     alt="Learning Illustration" class="img-fluid rounded-4 shadow-lg floating-image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="features-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Explore Our Features</h2>
+            <p class="text-muted">Everything you need to succeed in your learning journey</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon-wrapper mb-3">
+                            <i class="fas fa-route fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold">Learning Paths</h4>
+                        <p class="text-muted">Structured learning journeys to master specific skills and subjects.</p>
+                        <a href="{% url 'learning_paths:path_list' %}" class="btn btn-sm btn-primary mt-2">
+                            <i class="fas fa-arrow-right me-1"></i>Explore Paths
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon-wrapper mb-3">
+                            <i class="fas fa-puzzle-piece fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold">Interactive Quizzes</h4>
+                        <p class="text-muted">Test your knowledge with our wide range of AI-powered quizzes.</p>
+                        <a href="{% url 'quiz_app:quiz_list' %}" class="btn btn-sm btn-primary mt-2">
+                            <i class="fas fa-arrow-right me-1"></i>Take a Quiz
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon-wrapper mb-3">
+                            <i class="fas fa-stopwatch fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold">Study Sessions</h4>
+                        <p class="text-muted">Track your study time and increase productivity with focus sessions.</p>
+                        <a href="{% url 'study_sessions:list' %}" class="btn btn-sm btn-primary mt-2">
+                            <i class="fas fa-arrow-right me-1"></i>Start Studying
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ai-assistant-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <h2 class="fw-bold mb-4">AI Learning Assistant</h2>
+                <p class="lead mb-4">Get personalized learning recommendations and answers to your questions with our AI assistant.</p>
+                <div class="mb-4">
+                    <div class="d-flex mb-2 align-items-center">
+                        <i class="fas fa-brain text-primary me-3"></i>
+                        <span>Personalized study recommendations</span>
+                    </div>
+                    <div class="d-flex mb-2 align-items-center">
+                        <i class="fas fa-question-circle text-primary me-3"></i>
+                        <span>Instant answers to your academic questions</span>
+                    </div>
+                    <div class="d-flex mb-2 align-items-center">
+                        <i class="fas fa-lightbulb text-primary me-3"></i>
+                        <span>Custom learning path creation</span>
+                    </div>
+                </div>
+                <a href="{% url 'learning_paths:ai_assistant' %}" class="btn btn-primary">
+                    <i class="fas fa-robot me-2"></i>Try AI Assistant
+                </a>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <img src="https://img.freepik.com/free-vector/artificial-intelligence-concept-illustration_114360-7000.jpg" 
+                     alt="AI Assistant" class="img-fluid rounded-4 shadow-lg">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-gradient {
+        background: linear-gradient(45deg, #4b6cb7, #182848);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .hero-section {
+        min-height: 500px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .floating-image {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .feature-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(75, 108, 183, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    
+    .hover-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+</style>
+{% endblock %}

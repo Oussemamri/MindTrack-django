@@ -60,13 +60,13 @@ def session_update(request, pk):
 @login_required
 def session_delete(request, pk):
     session = get_object_or_404(StudySession, pk=pk, user=request.user)
+    
     if request.method == 'POST':
         session.delete()
-        messages.success(request, 'Study session deleted successfully!')
-        return redirect('study_sessions:session_list')
-    return render(request, 'study_sessions/session_confirm_delete.html', {
-        'session': session
-    })
+        messages.success(request, "Study session deleted successfully.")
+        return redirect('study_sessions:list')
+    
+    return render(request, 'study_sessions/session_delete.html', {'session': session})
 
 @login_required
 def add_activity(request, pk):
@@ -83,24 +83,44 @@ def add_activity(request, pk):
 @login_required
 def complete_session(request, pk):
     session = get_object_or_404(StudySession, pk=pk, user=request.user)
-    session.status = 'completed'
-    session.end_time = timezone.now()
-    session.save()
-    messages.success(request, 'Session completed successfully!')
-    return redirect('study_sessions:session_list')
+    
+    # Only complete sessions that are not already completed
+    if session.status != 'completed':
+        session.status = 'completed'
+        session.end_time = timezone.now()
+        
+        # Calculate duration if there's a start time
+        if session.start_time:
+            session.duration = session.end_time - session.start_time
+        
+        session.save()
+        messages.success(request, "Congratulations on completing your study session!")
+    
+    # Fix: Change 'session_list' to 'list'
+    return redirect('study_sessions:list')
 
 @login_required
 def pause_session(request, pk):
     session = get_object_or_404(StudySession, pk=pk, user=request.user)
-    session.status = 'paused'
-    session.save()
-    messages.success(request, 'Session paused successfully!')
-    return redirect('study_sessions:session_list')
+    
+    # Only pause sessions that are in progress
+    if session.status == 'in_progress':
+        session.status = 'paused'
+        session.save()
+        messages.success(request, "Study session paused. Take a break!")
+    
+    # Fix: Change 'session_list' to 'list'
+    return redirect('study_sessions:list')
 
 @login_required
 def resume_session(request, pk):
     session = get_object_or_404(StudySession, pk=pk, user=request.user)
-    session.status = 'in_progress'
-    session.save()
-    messages.success(request, 'Session resumed successfully!')
-    return redirect('study_sessions:session_detail', pk=pk)
+    
+    # Only resume paused sessions
+    if session.status == 'paused':
+        session.status = 'in_progress'
+        session.save()
+        messages.success(request, "Study session resumed. Keep up the good work!")
+    
+    # Fix: Change 'session_list' to 'list'
+    return redirect('study_sessions:list')
